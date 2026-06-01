@@ -99,7 +99,7 @@ def analyze_with_gemini(news_dict):
 
 Пиши только по-русски. Не повторяй новости с одинаковым смыслом. Начни сразу с новостей, без вступления."""
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
     payload = {
         "contents": [{"parts": [{"text": prompt}]}]
     }
