@@ -62,7 +62,7 @@ def fetch_news(feeds_dict, hours_back=24):
                 print(f"Ошибка при загрузке {url}: {e}")
 
         if articles:
-            all_news[topic] = articles[:20]
+            all_news[topic] = articles[:5]
 
     return all_news
 
