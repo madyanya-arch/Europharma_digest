@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 # ─── НАСТРОЙКИ ───────────────────────────────────────────────────────────────
 TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
-GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
 # ─── RSS-ЛЕНТЫ ПО ТЕМАМ ───────────────────────────────────────────────────────
 RSS_FEEDS = {
@@ -67,9 +67,9 @@ def fetch_news(feeds_dict, hours_back=24):
     return all_news
 
 
-# ─── АНАЛИЗ ЧЕРЕЗ GEMINI ──────────────────────────────────────────────────────
-def analyze_with_gemini(news_dict):
-    """Gemini отбирает важные новости и пишет резюме на русском."""
+# ─── АНАЛИЗ ЧЕРЕЗ OPENAI ──────────────────────────────────────────────────────
+def analyze_with_openai(news_dict):
+    """OPENAI отбирает важные новости и пишет резюме на русском."""
 
     news_text = ""
     for topic, articles in news_dict.items():
@@ -99,7 +99,7 @@ def analyze_with_gemini(news_dict):
 
 Пиши только по-русски. Не повторяй новости с одинаковым смыслом. Начни сразу с новостей, без вступления."""
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/openai-2.0-flash:generateContent?key={ OPENAI_API_KEY}"
     payload = {
         "contents": [{"parts": [{"text": prompt}]}]
     }
@@ -146,14 +146,18 @@ def main():
         return
 
     total = sum(len(v) for v in news.values())
-    print(f"Найдено {total} статей. Отправляю в Gemini...")
+    print(f"Найдено {total} статей. Отправляю в OPENAI...")
 
-    digest = analyze_with_gemini(news)
+    digest = analyze_with_openai(news)
 
     print("Отправляю в Telegram...")
     send_to_telegram(digest)
 
     print("Готово!")
+
+
+if __name__ == "__main__":
+    main()
 
 
 if __name__ == "__main__":
