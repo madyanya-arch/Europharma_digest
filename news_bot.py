@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 # ─── НАСТРОЙКИ ───────────────────────────────────────────────────────────────
 TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 
 # ─── RSS-ЛЕНТЫ ПО ТЕМАМ ───────────────────────────────────────────────────────
 RSS_FEEDS = {
@@ -66,8 +66,8 @@ def fetch_news(feeds_dict, hours_back=24):
     return all_news
 
 
-# ─── АНАЛИЗ ЧЕРЕЗ OPENAI ──────────────────────────────────────────────────────
-def analyze_with_openai(news_dict):
+# ─── АНАЛИЗ ЧЕРЕЗ GEMINI ──────────────────────────────────────────────────────
+def analyze_with_gemini(news_dict):
     news_text = ""
     for topic, articles in news_dict.items():
         news_text += f"\n\n=== {topic} ===\n"
@@ -96,18 +96,11 @@ def analyze_with_openai(news_dict):
 
 Пиши только по-русски. Начни сразу с новостей, без вступления."""
 
-    headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "Content-Type": "application/json",
-    }
-    payload = {
-        "model": "gpt-4o-mini",
-        "messages": [{"role": "user", "content": prompt}],
-        "max_tokens": 2000,
-    }
-    resp = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key={GEMINI_API_KEY}"
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    resp = requests.post(url, json=payload)
     resp.raise_for_status()
-    return resp.json()["choices"][0]["message"]["content"]
+    return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
 
 
 # ─── ОТПРАВКА В TELEGRAM ──────────────────────────────────────────────────────
@@ -146,9 +139,9 @@ def main():
         return
 
     total = sum(len(v) for v in news.values())
-    print(f"Найдено {total} статей. Отправляю в OpenAI...")
+    print(f"Найдено {total} статей. Отправляю в Gemini...")
 
-    digest = analyze_with_openai(news)
+    digest = analyze_with_gemini(news)
 
     print("Отправляю в Telegram...")
     send_to_telegram(digest)
