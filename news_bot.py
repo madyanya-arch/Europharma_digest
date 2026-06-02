@@ -141,7 +141,7 @@ def main():
     total = sum(len(v) for v in news.values())
     print(f"Найдено {total} статей. Отправляю в Gemini...")
 
-    digest = analyze_with_gemini(news)
+    digest = "Тестовое сообщение — бот работает! 🎉"
 
     print("Отправляю в Telegram...")
     send_to_telegram(digest)
