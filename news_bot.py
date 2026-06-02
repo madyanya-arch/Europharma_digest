@@ -35,7 +35,6 @@ RSS_FEEDS = {
 
 # ─── СБОР НОВОСТЕЙ ────────────────────────────────────────────────────────────
 def fetch_news(feeds_dict, hours_back=24):
-    """Собирает новости за последние N часов из RSS-лент."""
     cutoff = datetime.now() - timedelta(hours=hours_back)
     all_news = {}
 
@@ -69,8 +68,6 @@ def fetch_news(feeds_dict, hours_back=24):
 
 # ─── АНАЛИЗ ЧЕРЕЗ OPENAI ──────────────────────────────────────────────────────
 def analyze_with_openai(news_dict):
-    """OPENAI отбирает важные новости и пишет резюме на русском."""
-
     news_text = ""
     for topic, articles in news_dict.items():
         news_text += f"\n\n=== {topic} ===\n"
@@ -81,37 +78,40 @@ def analyze_with_openai(news_dict):
 1. Europharma — сеть из 180 аптек (лекарства и парафармацевтика)
 2. Marwin — сеть из 35 магазинов (игрушки, книги, канцелярия, видеоигры, приставки)
 
-Вот новости за последние 24 часа по нескольким темам:
+Вот новости за последние 24 часа:
 {news_text}
 
 Твоя задача:
-1. Из всего списка отбери 3–5 самых ВАЖНЫХ и РЕЛЕВАНТНЫХ новостей для этого CFO
-2. Для каждой выбранной новости напиши:
-   - Краткое резюме (2–3 предложения на русском, своими словами)
+1. Отбери 3–5 самых важных и релевантных новостей для этого CFO
+2. Для каждой напиши:
+   - Краткое резюме (2–3 предложения на русском)
    - Почему это важно для его бизнеса (1 предложение)
    - Ссылку на источник
 
-Формат ответа — строго Telegram Markdown:
+Формат — строго Telegram Markdown:
 *[Тема]* — Заголовок
 📌 Суть: ...
 💼 Для бизнеса: ...
 🔗 [Читать](<ссылка>)
 
-Пиши только по-русски. Не повторяй новости с одинаковым смыслом. Начни сразу с новостей, без вступления."""
+Пиши только по-русски. Начни сразу с новостей, без вступления."""
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/openai-2.0-flash:generateContent?key={ OPENAI_API_KEY}"
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}]
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json",
     }
-    resp = requests.post(url, json=payload)
+    payload = {
+        "model": "gpt-4o-mini",
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": 2000,
+    }
+    resp = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
     resp.raise_for_status()
-    data = resp.json()
-    return data["candidates"][0]["content"]["parts"][0]["text"]
+    return resp.json()["choices"][0]["message"]["content"]
 
 
 # ─── ОТПРАВКА В TELEGRAM ──────────────────────────────────────────────────────
 def send_to_telegram(text):
-    """Отправляет сообщение в Telegram, разбивая на части если нужно."""
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     today = datetime.now().strftime("%d.%m.%Y")
     header = f"📰 *Утренний дайджест — {today}*\n_Europharma & Marwin_\n\n"
@@ -146,7 +146,7 @@ def main():
         return
 
     total = sum(len(v) for v in news.values())
-    print(f"Найдено {total} статей. Отправляю в OPENAI...")
+    print(f"Найдено {total} статей. Отправляю в OpenAI...")
 
     digest = analyze_with_openai(news)
 
@@ -158,9 +158,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-if __name__ == "__main__":
-    main()
-
 
