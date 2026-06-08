@@ -10,26 +10,28 @@ ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
  
 # ─── RSS-ЛЕНТЫ ПО ТЕМАМ ───────────────────────────────────────────────────────
 RSS_FEEDS = {
-    "💊 Фарма и аптеки": [
-        "https://pharmvestnik.ru/rss/",
-        "https://www.apteka.ua/rss/news.xml",
+    "💊 Фарма и аптеки Казахстана": [
+        "https://www.pharmacom.kz/rss/",
+        "https://kapital.kz/rss/healthcare.xml",
+        "https://tengrinews.kz/rss/health/",
         "https://remedium.ru/rss/news/",
-        "https://www.gxpnews.ru/feed/",
     ],
-    "🧸 Ритейл игрушек и книг": [
-        "https://retailer.ru/feed/",
-        "https://www.kommersant.ru/RSS/section-retail.xml",
-        "https://iz.ru/xml/rss/retail.xml",
+    "🧸 Ритейл Казахстана": [
+        "https://kapital.kz/rss/trade.xml",
+        "https://forbes.kz/rss/",
+        "https://retail.ru/rss/news.xml",
     ],
-    "📈 Фондовый рынок": [
+    "📈 Фондовый рынок и экономика": [
+        "https://kapital.kz/rss/finances.xml",
+        "https://forbes.kz/rss/finances/",
+        "https://tengrinews.kz/rss/economy/",
         "https://smart-lab.ru/rss.php",
-        "https://www.rbc.ru/v10/finance/rss.rss",
-        "https://investing.com/rss/news_25.rss",
-        "https://vc.ru/finance/rss",
     ],
-    "🏪 Ритейл в целом": [
-        "https://www.retail.ru/rss/news.xml",
-        "https://oborot.ru/feed/",
+    "🌍 Мировые новости влияющие на Казахстан": [
+        "https://kapital.kz/rss/world.xml",
+        "https://tengrinews.kz/rss/world/",
+        "https://www.rbc.ru/v10/world/rss.rss",
+        "https://vc.ru/finance/rss",
     ],
 }
  
@@ -75,6 +77,7 @@ def analyze_with_claude(news_dict):
             news_text += f"\n{i}. [{art['date']}] {art['title']}\n{art['summary']}\nURL: {art['link']}\n"
  
     prompt = f"""Ты — аналитик для финансового директора двух розничных сетей в Казахстане:
+    Приоритет — новости из Казахстана и события которые напрямую влияют на казахстанский рынок. Украинские и российские внутренние новости не релевантны если не касаются Казахстана.
 1. Europharma — сеть из 180 аптек (лекарства и парафармацевтика)
 2. Marwin — сеть из 35 магазинов (игрушки, книги, канцелярия, видеоигры, приставки)
  
