@@ -10,27 +10,23 @@ ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
  
 # ─── RSS-ЛЕНТЫ ПО ТЕМАМ ───────────────────────────────────────────────────────
 RSS_FEEDS = {
-    "💊 Фарма и аптеки Казахстана": [
-        "https://www.pharmacom.kz/rss/",
-        "https://kapital.kz/rss/healthcare.xml",
-        "https://tengrinews.kz/rss/health/",
+    "💊 Фарма и аптеки": [
         "https://remedium.ru/rss/news/",
+        "https://pharmvestnik.ru/rss/",
     ],
-    "🧸 Ритейл Казахстана": [
-        "https://kapital.kz/rss/trade.xml",
-        "https://forbes.kz/rss/",
-        "https://retail.ru/rss/news.xml",
+    "🧸 Ритейл": [
+        "https://www.retail.ru/rss/news.xml",
+        "https://retailer.ru/feed/",
     ],
-    "📈 Фондовый рынок и экономика": [
-        "https://kapital.kz/rss/finances.xml",
-        "https://forbes.kz/rss/finances/",
-        "https://tengrinews.kz/rss/economy/",
+    "📈 Фондовый рынок и экономика Казахстана": [
+        "https://forbes.kz/feed/",
+        "https://kapital.kz/feed/",
         "https://smart-lab.ru/rss.php",
+        "https://www.rbc.ru/v10/finance/rss.rss",
     ],
-    "🌍 Мировые новости влияющие на Казахстан": [
-        "https://kapital.kz/rss/world.xml",
-        "https://tengrinews.kz/rss/world/",
-        "https://www.rbc.ru/v10/world/rss.rss",
+    "🌍 Казахстан и мир": [
+        "https://tengrinews.kz/rss/",
+        "https://informburo.kz/rss",
         "https://vc.ru/finance/rss",
     ],
 }
