@@ -10,9 +10,14 @@ ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
  
 # ─── RSS-ЛЕНТЫ ПО ТЕМАМ ───────────────────────────────────────────────────────
 RSS_FEEDS = {
-    "💊 Фарма и аптеки": [
-        "https://remedium.ru/rss/news/",
-        "https://pharmvestnik.ru/rss/",
+  "💊 Фарма и аптеки": [
+    "https://tengrinews.kz/rss/",
+    "https://informburo.kz/rss",
+    "https://kapital.kz/feed/",
+    "https://forbes.kz/feed/",
+    "https://remedium.ru/rss/news/",
+    "https://pharmvestnik.ru/rss/",
+],
     ],
     "🧸 Ритейл": [
         "https://www.retail.ru/rss/news.xml",
